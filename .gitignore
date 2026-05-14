@@ -1,0 +1,27 @@
+# Python 相关的临时文件
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# 虚拟环境（Python 的独立运行空间）
+env/
+.env/
+
+# IDE 和编辑器配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件（Windows/Mac 自动生成的）
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# Claude 本地配置（每个人电脑上不一样，不需要共享）
+.claude/
