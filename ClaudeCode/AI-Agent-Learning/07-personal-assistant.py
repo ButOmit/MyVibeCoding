@@ -265,7 +265,6 @@ if __name__ == "__main__":
             "搜索一下 Python 最新版本有什么新特性",
             "帮我写一首关于编程的诗，保存到 poem.txt",
         ],
-        theme="soft",
     )
 
     ui.launch(share=False)
