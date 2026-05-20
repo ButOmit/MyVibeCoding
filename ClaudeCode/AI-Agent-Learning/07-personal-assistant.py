@@ -1,7 +1,7 @@
 """
 个人 AI 助手 —— 带网页界面的全能 Agent
 =========================================
-整合了全部 5 个工具，用 Gradio 做了网页界面。
+整合了全部 8 个工具，用 Gradio 做了网页界面。
 面试时用手机打开就能演示 —— 比简历上的任何话都有说服力。
 """
 import sys
@@ -21,7 +21,7 @@ WORK_DIR = os.path.join(os.path.dirname(__file__), "agent_workspace")
 os.makedirs(WORK_DIR, exist_ok=True)
 
 # ============================================================
-# 5 个工具函数
+# 8 个工具函数
 # ============================================================
 
 def run_python_code(code: str) -> str:
@@ -91,11 +91,189 @@ def web_search(query: str, max_results: int = 5) -> str:
         return f"搜索失败：{e}"
 
 
+def get_weather(city: str) -> str:
+    """查询指定城市的天气"""
+    try:
+        import requests
+        url = f"https://wttr.in/{city}?format=j1"
+        resp = requests.get(url, timeout=10)
+        data = resp.json()
+        current = data["current_condition"][0]
+        weather_desc = current["weatherDesc"][0]["value"]
+        temp_c = current["temp_C"]
+        feels_like = current["FeelsLikeC"]
+        humidity = current["humidity"]
+        wind_speed = current["windspeedKmph"]
+
+        forecast = data["weather"][0]
+        today_max = forecast["maxtempC"]
+        today_min = forecast["mintempC"]
+        tomorrow = data["weather"][1]
+        tomorrow_max = tomorrow["maxtempC"]
+        tomorrow_min = tomorrow["mintempC"]
+        tomorrow_desc = tomorrow["hourly"][4]["weatherDesc"][0]["value"]
+
+        return f"""城市：{city}
+当前天气：{weather_desc}
+当前温度：{temp_c}°C（体感 {feels_like}°C）
+湿度：{humidity}%
+风速：{wind_speed} km/h
+今日温度范围：{today_min}°C ~ {today_max}°C
+明日：{tomorrow_desc}，{tomorrow_min}°C ~ {tomorrow_max}°C"""
+    except Exception as e:
+        return f"查询天气失败：{e}。请检查城市名是否正确（如：Shanghai、Beijing）"
+
+
+# ============================================================
+# RAG 引擎：文档检索
+# ============================================================
+
+DOCS_DIR = os.path.join(os.path.dirname(__file__), "document_library")
+os.makedirs(DOCS_DIR, exist_ok=True)
+
+
+class RAGEngine:
+    """文档检索引擎"""
+
+    def __init__(self):
+        self.chunks = []
+        self.chunk_size = 200
+
+    def load_file(self, filepath: str) -> str:
+        if not os.path.exists(filepath):
+            return f"文件不存在：{filepath}"
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                text = f.read()
+            paragraphs = text.split("\n")
+            self.chunks = []
+            current = ""
+            for para in paragraphs:
+                para = para.strip()
+                if not para:
+                    continue
+                current += para + "\n"
+                if len(current) >= self.chunk_size:
+                    self.chunks.append(current.strip())
+                    current = ""
+            if current.strip():
+                self.chunks.append(current.strip())
+            return f"已加载文件：{filepath}，共切成 {len(self.chunks)} 个段落"
+        except Exception as e:
+            return f"加载失败：{e}"
+
+    def search(self, query: str, top_k: int = 3) -> str:
+        if not self.chunks:
+            return "没有已加载的文档。请先用 load_document 加载一个文件。"
+        q = query.lower()
+        scored = []
+        for i, chunk in enumerate(self.chunks):
+            chunk_lower = chunk.lower()
+            score = 0
+            score += chunk_lower.count(q) * 5
+            for j in range(len(q) - 1):
+                bigram = q[j:j+2]
+                if bigram in chunk_lower:
+                    score += 1
+            for word in q.split():
+                if word in chunk_lower:
+                    score += 1
+            scored.append((score, i, chunk))
+        scored.sort(key=lambda x: x[0], reverse=True)
+        top_chunks = scored[:top_k]
+        result = []
+        for score, idx, chunk in top_chunks:
+            if score > 0:
+                result.append(f"[段落 {idx+1}，相关度: {score}]\n{chunk}")
+        if not result:
+            return "没有找到相关内容。试试换个关键词。"
+        return "\n\n---\n\n".join(result)
+
+
+rag = RAGEngine()
+
+# 放一篇示例文章
+sample_text = """# Python 与人工智能导论
+
+## 第一章：什么是人工智能
+
+人工智能（Artificial Intelligence，简称 AI）是计算机科学的一个分支，旨在创建能够模拟人类智能的系统。AI 系统可以执行学习、推理、感知、语言理解等任务。
+
+人工智能主要分为三类：狭义人工智能（ANI）、通用人工智能（AGI）和超级人工智能（ASI）。目前我们使用的所有 AI 都属于狭义人工智能，它们只能在特定领域内执行任务。
+
+## 第二章：机器学习基础
+
+机器学习（Machine Learning）是人工智能的核心方法之一。它让计算机通过数据来学习，而不是通过显式编程。机器学习的三种主要范式是：监督学习、无监督学习和强化学习。
+
+监督学习使用带标签的数据来训练模型。例如，给模型看很多猫和狗的图片，并告诉它每张图是什么，模型就能学会区分猫和狗。
+
+无监督学习则使用没有标签的数据。它试图在数据中发现隐藏的模式或结构，比如将相似的客户分成不同群体。
+
+强化学习让智能体在环境中通过试错来学习。智能体执行动作，环境给予奖励或惩罚，智能体逐渐学会最优策略。
+
+## 第三章：深度学习
+
+深度学习（Deep Learning）是机器学习的一个子领域，使用多层神经网络来学习数据的表示。深度学习在图像识别、自然语言处理、语音识别等领域取得了突破性进展。
+
+著名的深度学习架构包括：卷积神经网络（CNN）用于图像处理，循环神经网络（RNN）用于序列数据，Transformer 架构用于自然语言处理。
+
+## 第四章：Python 在 AI 中的应用
+
+Python 是目前 AI 开发中最流行的编程语言。它的语法简洁，拥有丰富的科学计算和机器学习库，如 NumPy、Pandas、Scikit-learn、PyTorch 和 TensorFlow。
+
+Python 的优势在于其庞大的社区和生态系统。无论你想做什么 AI 任务，几乎都能找到对应的 Python 库来帮助你。
+
+## 第五章：未来展望
+
+AI 技术正在快速发展。大语言模型（LLM）如 GPT、Claude 和 DeepSeek 正在改变人类与计算机交互的方式。未来的 AI 系统将更加智能、更加可靠，但也带来了伦理和安全性方面的挑战。
+"""
+
+sample_path = os.path.join(DOCS_DIR, "AI入门简介.txt")
+if not os.path.exists(sample_path):
+    with open(sample_path, "w", encoding="utf-8") as f:
+        f.write(sample_text)
+
+
+def load_document(filepath: str) -> str:
+    return rag.load_file(filepath)
+
+
+def search_document(query: str) -> str:
+    return rag.search(query)
+
+
 # ============================================================
 # 工具注册表
 # ============================================================
 
 ALL_TOOLS = {
+    "get_weather": {
+        "func": get_weather,
+        "description": "查询指定城市的实时天气和未来预报。当用户问天气、温度、是否下雨时必须用此工具。城市名用英文（如 Shanghai、Beijing）。",
+        "parameters": {
+            "type": "object",
+            "properties": {"city": {"type": "string", "description": "城市英文名，如 Shanghai"}},
+            "required": ["city"],
+        },
+    },
+    "load_document": {
+        "func": load_document,
+        "description": "加载一个文档到 RAG 引擎。用户想阅读某篇文档时使用。",
+        "parameters": {
+            "type": "object",
+            "properties": {"filepath": {"type": "string", "description": "文档的完整路径"}},
+            "required": ["filepath"],
+        },
+    },
+    "search_document": {
+        "func": search_document,
+        "description": "在已加载的文档中搜索相关内容。回答关于文档的问题前必须先搜索。",
+        "parameters": {
+            "type": "object",
+            "properties": {"query": {"type": "string", "description": "搜索关键词或问题"}},
+            "required": ["query"],
+        },
+    },
     "run_python_code": {
         "func": run_python_code,
         "description": "执行 Python 代码并返回结果。用于计算、处理数据。",
@@ -221,7 +399,11 @@ SYSTEM_PROMPT = f"""你是一个全能的 AI 助手。你可以：
 - 查看当前日期时间
 - 读写文件（工作目录：{WORK_DIR}）
 - 搜索网页获取最新信息
-用中文回答，语气友好。"""
+- 查询任意城市的天气（get_weather）
+- 加载文档并用 RAG 检索回答（load_document + search_document）
+用中文回答，语气友好。
+
+文档库目录：{DOCS_DIR}，里面有一篇 AI 入门简介可以加载测试。"""
 
 
 def chat_with_ai(user_message, history):
@@ -240,10 +422,22 @@ def chat_with_ai(user_message, history):
 
 if __name__ == "__main__":
     import gradio as gr
+    import socket
+
+    # 获取本机局域网 IP
+    local_ip = "127.0.0.1"
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+    except Exception:
+        pass
 
     print("=" * 50)
     print("个人 AI 助手 正在启动...")
-    print("浏览器打开显示的地址就能用，手机也能访问")
+    print(f"电脑访问: http://127.0.0.1:7860")
+    print(f"手机访问: http://{local_ip}:7860")
     print("=" * 50)
 
     ui = gr.ChatInterface(
@@ -253,18 +447,21 @@ if __name__ == "__main__":
         **我能做什么？**
         - 🧮 计算数学题、运行 Python 代码
         - 🕐 查看当前时间
+        - 🌤 查询任意城市天气
         - 📁 读写文件
         - 🔍 搜索网页获取最新信息
+        - 📚 加载文档，基于原文回答问题（RAG）
         - 💬 记住对话上下文
 
-        **试试问我：** "帮我算 1 到 100 的和" | "现在几点了" | "最近有什么科技新闻"
+        **试试问我：** "上海今天天气怎么样" | "加载 AI 入门简介然后问我机器学习有哪些类型" | "最近有什么科技新闻"
         """,
         examples=[
             "帮我算 1 加到 100 是多少",
-            "现在几点了",
+            "上海今天天气怎么样",
             "搜索一下 Python 最新版本有什么新特性",
+            f"加载文档 {sample_path}",
             "帮我写一首关于编程的诗，保存到 poem.txt",
         ],
     )
 
-    ui.launch(share=False)
+    ui.launch()
