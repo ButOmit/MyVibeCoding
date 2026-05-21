@@ -25,3 +25,9 @@ Desktop.ini
 
 # Claude 本地配置（每个人电脑上不一样，不需要共享）
 .claude/
+
+# Gradio 缓存
+.gradio/
+
+# 模型缓存
+model_cache/
