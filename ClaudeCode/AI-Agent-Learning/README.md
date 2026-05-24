@@ -14,6 +14,8 @@
             10           进阶：向量RAG（TF-IDF → 语义搜索）
               ↓
         11 + 12          本地模型 + 视觉理解（Ollama + llava）
+              ↓
+            13           体验：流式输出（打字机效果）
 ```
 
 ## 项目清单
@@ -34,6 +36,7 @@
 | 10 | `10-vector-rag-agent.py` | 向量语义搜索 | TF-IDF, 余弦相似度, 中文n-gram |
 | 11 | `11-local-agent.py` | 本地模型部署 | Ollama, OpenAI兼容接口, 免费AI |
 | 12 | `12-vision-agent.py` | 图片理解 Agent | llava:7b, 视觉模型, 多模态 Agent |
+| 13 | `13-streaming-agent.py` | 流式输出 | stream=True, generator, 打字机效果 |
 
 ## 技术栈
 
@@ -56,6 +59,6 @@ python 10-vector-rag-agent.py    # 向量RAG版
 
 - [x] 本地模型部署（Ollama + qwen2.5:3b）
 - [x] 多模态图片理解（llava:7b 视觉 Agent）
-- [ ] 流式输出（AI 打字效果）
+- [x] 流式输出（AI 打字效果）
 - [ ] 多 Agent 协作
 - [ ] Embedding 语义搜索（真正的向量模型）
