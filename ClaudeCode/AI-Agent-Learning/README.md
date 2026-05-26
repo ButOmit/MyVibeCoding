@@ -18,6 +18,8 @@
             13           体验：流式输出（打字机效果）
               ↓
             14           升级：Embedding 语义搜索（神经网络向量）
+              ↓
+            15           收尾：多 Agent 协作（团队分工）
 ```
 
 ## 项目清单
@@ -40,6 +42,7 @@
 | 12 | `12-vision-agent.py` | 图片理解 Agent | llava:7b, 视觉模型, 多模态 Agent |
 | 13 | `13-streaming-agent.py` | 流式输出 | stream=True, generator, 打字机效果 |
 | 14 | `14-embedding-rag-agent.py` | Embedding 语义搜索 | nomic-embed-text, 神经网络向量, 跨语言理解 |
+| 15 | `15-multi-agent.py` | 多 Agent 协作 | 团队分工, 协调员+研究员+程序员, 任务派发 |
 
 ## 技术栈
 
@@ -63,5 +66,5 @@ python 10-vector-rag-agent.py    # 向量RAG版
 - [x] 本地模型部署（Ollama + qwen2.5:3b）
 - [x] 多模态图片理解（llava:7b 视觉 Agent）
 - [x] 流式输出（AI 打字效果）
-- [ ] 多 Agent 协作
+- [x] 多 Agent 协作（团队分工）
 - [x] Embedding 语义搜索（真正的向量模型）
