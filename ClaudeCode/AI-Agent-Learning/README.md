@@ -20,6 +20,8 @@
             14           升级：Embedding 语义搜索（神经网络向量）
               ↓
             15           收尾：多 Agent 协作（团队分工）
+              ↓
+           V2            🌟 集大成：个人AI助手v2.0（整合所有技术）
 ```
 
 ## 项目清单
@@ -43,6 +45,7 @@
 | 13 | `13-streaming-agent.py` | 流式输出 | stream=True, generator, 打字机效果 |
 | 14 | `14-embedding-rag-agent.py` | Embedding 语义搜索 | nomic-embed-text, 神经网络向量, 跨语言理解 |
 | 15 | `15-multi-agent.py` | 多 Agent 协作 | 团队分工, 协调员+研究员+程序员, 任务派发 |
+| V2 | `personal_assistant_v2.py` | 🌟 个人AI助手 v2.0 | 流式+Embedding RAG+多轮工具+8工具整合 |
 
 ## 技术栈
 
