@@ -24,6 +24,8 @@
            V2            🌟 集大成：个人AI助手v2.0（整合所有技术）
               ↓
             16           框架：LangChain/LangGraph 工业标准
+              ↓
+            17           进阶：混合检索+重排序（RRF+LLM Reranker）
 ```
 
 ## 项目清单
@@ -49,6 +51,7 @@
 | 15 | `15-multi-agent.py` | 多 Agent 协作 | 团队分工, 协调员+研究员+程序员, 任务派发 |
 | V2 | `personal_assistant_v2.py` | 🌟 个人AI助手 v2.0 | 流式+Embedding RAG+多轮工具+8工具整合 |
 | 16 | `16-langchain-intro.py` | LangChain/LangGraph 框架入门 | ChatOpenAI, @tool, Chroma, LCEL 链 |
+| 17 | `17-advanced-rag.py` | 混合检索 + 重排序 | BM25, RRF融合, LLM Reranker |
 
 
 ## 技术栈
