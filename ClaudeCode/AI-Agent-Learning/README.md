@@ -28,6 +28,8 @@
             17           进阶：混合检索+重排序（RRF+LLM Reranker）
               ↓
             18           前沿：MCP 协议（工具即服务，动态发现）
+              ↓
+            19           部署：FastAPI + Agent（REST API 上线）
 ```
 
 ## 项目清单
@@ -55,6 +57,7 @@
 | 16 | `16-langchain-intro.py` | LangChain/LangGraph 框架入门 | ChatOpenAI, @tool, Chroma, LCEL 链 |
 | 17 | `17-advanced-rag.py` | 混合检索 + 重排序 | BM25, RRF融合, LLM Reranker |
 | 18 | `18-mcp-server.py` + `18-mcp-agent.py` | MCP 协议 | FastMCP, JSON-RPC, 工具动态发现 |
+| 19 | `19-fastapi-agent.py` | FastAPI Agent 部署 | REST API, SSE 流式, /docs 自动文档 |
 
 
 ## 技术栈
