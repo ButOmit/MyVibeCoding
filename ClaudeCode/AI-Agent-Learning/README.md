@@ -32,6 +32,8 @@
             19           部署：FastAPI + Agent（REST API 上线）
               ↓
             20           记忆：三层记忆系统（短期+长期+画像）
+              ↓
+            21           进阶：LangGraph 工业工作流（并行+分支+中断）
 ```
 
 ## 项目清单
@@ -61,6 +63,7 @@
 | 18 | `18-mcp-server.py` + `18-mcp-agent.py` | MCP 协议 | FastMCP, JSON-RPC, 工具动态发现 |
 | 19 | `19-fastapi-agent.py` | FastAPI Agent 部署 | REST API, SSE 流式, /docs 自动文档 |
 | 20 | `20-agent-memory.py` | Agent 记忆系统 | 短期+长期+摘要, Chroma, 用户画像 |
+| 21 | `21-langgraph-advanced.py` | LangGraph 进阶工作流 | 并行, 条件分支, 人工介入, 断点续跑 |
 
 
 ## 技术栈
