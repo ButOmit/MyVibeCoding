@@ -34,6 +34,8 @@
             20           记忆：三层记忆系统（短期+长期+画像）
               ↓
             21           进阶：LangGraph 工业工作流（并行+分支+中断）
+              ↓
+            22           框架：CrewAI 角色驱动多Agent编排
 ```
 
 ## 项目清单
@@ -64,6 +66,7 @@
 | 19 | `19-fastapi-agent.py` | FastAPI Agent 部署 | REST API, SSE 流式, /docs 自动文档 |
 | 20 | `20-agent-memory.py` | Agent 记忆系统 | 短期+长期+摘要, Chroma, 用户画像 |
 | 21 | `21-langgraph-advanced.py` | LangGraph 进阶工作流 | 并行, 条件分支, 人工介入, 断点续跑 |
+| 22 | `22-crewai-multi-agent.py` | CrewAI 多 Agent 编排 | 角色驱动, Task 编排, 三Agent协作 |
 
 
 ## 技术栈
