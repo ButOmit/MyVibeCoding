@@ -36,6 +36,8 @@
             21           进阶：LangGraph 工业工作流（并行+分支+中断）
               ↓
             22           框架：CrewAI 角色驱动多Agent编排
+              ↓
+           V3           🌟 终极集成：记忆+RAG+流式+工具+FastAPI
 ```
 
 ## 项目清单
@@ -67,6 +69,7 @@
 | 20 | `20-agent-memory.py` | Agent 记忆系统 | 短期+长期+摘要, Chroma, 用户画像 |
 | 21 | `21-langgraph-advanced.py` | LangGraph 进阶工作流 | 并行, 条件分支, 人工介入, 断点续跑 |
 | 22 | `22-crewai-multi-agent.py` | CrewAI 多 Agent 编排 | 角色驱动, Task 编排, 三Agent协作 |
+| V3 | `personal_assistant_v3.py` | 🌟 AI 助手 v3.0 终极集成 | 记忆+RAG+流式+工具+FastAPI 一体化 |
 
 
 ## 技术栈
