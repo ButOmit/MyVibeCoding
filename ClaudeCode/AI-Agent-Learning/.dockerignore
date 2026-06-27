@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+.venv
+venv/
+
+# 环境（安全！不要把 .env 打进镜像）
+.env
+*.env
+
+# 工作数据
+chroma_db/
+agent_workspace/
+ollama_data/
+
+# IDE
+.vscode/
+.idea/
+
+# 系统
+.DS_Store
+Thumbs.db

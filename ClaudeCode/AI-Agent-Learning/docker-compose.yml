@@ -1,0 +1,41 @@
+# ============================================
+# AI 助手 + Ollama 一键编排
+# ============================================
+# 使用: docker-compose up -d
+# 停止: docker-compose down
+
+version: "3.8"
+
+services:
+  # ---- AI 助手主服务 ----
+  ai-assistant:
+    build: .
+    container_name: ai-assistant-v3
+    ports:
+      - "8000:8000"
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - OLLAMA_HOST=ollama  # 容器内通过服务名访问
+    volumes:
+      - ./agent_workspace:/app/agent_workspace  # 持久化记忆数据
+    restart: unless-stopped
+    depends_on:
+      - ollama
+
+  # ---- Ollama 向量模型服务 ----
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-embed
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_data:/root/.ollama  # 持久化模型文件
+    restart: unless-stopped
+    # 启动后自动拉取 embedding 模型
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama serve &
+        sleep 5
+        ollama pull nomic-embed-text
+        tail -f /dev/null
