@@ -44,6 +44,8 @@
             24           部署：Docker 容器化 + 一键编排
               ↓
             25           工程：Prompt Engineering（Few-shot/CoT/结构化）
+              ↓
+            26           运维：Agent 可观测性（日志+追踪+指标面板）
 ```
 
 ## 项目清单
@@ -79,6 +81,7 @@
 | 23 | `23-database-agent.py` | Agent + 数据库 | SQLite, 自然语言→SQL, JOIN |
 | 24 | `24-docker-deploy.py` + Dockerfile | Docker 部署实战 | 容器化, docker-compose, 一键部署 |
 | 25 | `25-prompt-engineering.py` | Prompt Engineering | Few-shot, CoT, 结构化输出, System Prompt |
+| 26 | `26-agent-observability.py` | Agent 可观测性 | 日志, 调用追踪, Token统计, 监控面板 |
 
 
 ## 技术栈
