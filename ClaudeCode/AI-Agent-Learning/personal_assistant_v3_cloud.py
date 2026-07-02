@@ -312,7 +312,6 @@ async def chat_stream(req: ChatRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    print(" AI 助手 v3.0 Cloud 启动")
-    print(" http://0.0.0.0:8000")
-    print(" 零 Ollama 依赖，纯 DeepSeek API + BM25")
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="warning")
+    port = int(os.environ.get("PORT", 8000))
+    print(f" AI 助手 v3.0 Cloud 启动 :{port}")
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="warning")
