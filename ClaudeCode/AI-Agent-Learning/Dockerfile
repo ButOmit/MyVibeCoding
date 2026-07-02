@@ -13,8 +13,8 @@ COPY requirements.txt .
 # 安装依赖（用清华镜像加速）
 RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-# 复制项目文件
-COPY personal_assistant_v3.py .
+# 复制项目文件（云端版，零 Ollama 依赖）
+COPY personal_assistant_v3_cloud.py .
 COPY document_library/ ./document_library/
 
 # 创建数据目录
@@ -24,4 +24,4 @@ RUN mkdir -p agent_workspace
 EXPOSE 8000
 
 # 启动命令
-CMD ["python", "-u", "personal_assistant_v3.py"]
+CMD ["python", "-u", "personal_assistant_v3_cloud.py"]
